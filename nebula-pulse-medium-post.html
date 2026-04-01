@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nebula Pulse — Bringing Order to Container Chaos</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --ink-soft: #3a3a3a;
+    --ink-muted: #7a7a7a;
+    --ink-faint: #b0b0b0;
+    --bg: #faf9f7;
+    --bg-card: #f2f0ec;
+    --accent: #0e4fff;
+    --accent-glow: rgba(14,79,255,0.12);
+    --pulse: #1c1c2e;
+    --divider: #e0ddd8;
+    --font-serif: 'Libre Baskerville', Georgia, serif;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--pulse);
+    color: #fff;
+    padding: 80px 24px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(14,79,255,0.35) 0%, transparent 70%);
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.18;
+    max-width: 780px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: rgba(14,79,255,0.85);
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 540px;
+    margin: 0 auto 40px;
+    position: relative;
+  }
+  .byline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    position: relative;
+    font-family: var(--font-mono);
+  }
+  .byline span { color: rgba(255,255,255,0.7); }
+
+  /* ARTICLE */
+  .article-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* TYPOGRAPHY */
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 60px 0 18px;
+    color: var(--ink);
+  }
+  h3 {
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin: 36px 0 10px;
+    color: var(--ink);
+  }
+  p {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    color: var(--ink-soft);
+    line-height: 1.85;
+    margin-bottom: 22px;
+  }
+  p strong {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  p em {
+    font-style: italic;
+  }
+
+  /* LEAD */
+  .lead {
+    font-size: 1.2rem !important;
+    color: var(--ink) !important;
+    line-height: 1.75 !important;
+    margin-bottom: 36px !important;
+  }
+
+  /* DIVIDER */
+  .rule {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 56px 0;
+  }
+
+  /* PLATFORM CARDS */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 32px 0 40px;
+  }
+  @media (max-width: 540px) {
+    .platform-grid { grid-template-columns: 1fr; }
+  }
+  .platform-card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .platform-card .p-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .platform-card .p-title {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .platform-card .p-desc {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--pulse);
+    color: #fff;
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin: 44px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .callout::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(14,79,255,0.4) 0%, transparent 70%);
+  }
+  .callout p {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.9);
+    margin: 0;
+    position: relative;
+  }
+  .callout .quote-mark {
+    font-size: 4rem;
+    line-height: 1;
+    color: rgba(14,79,255,0.6);
+    font-family: var(--font-serif);
+    display: block;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  /* FEATURE LIST */
+  .feature-list {
+    list-style: none;
+    margin: 24px 0 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .feature-list li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(14,79,255,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .feature-content .f-title {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .feature-content .f-desc {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  /* COMPARISON TABLE */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 32px 0 40px;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .compare-table thead tr {
+    background: var(--pulse);
+    color: #fff;
+  }
+  .compare-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .compare-table th:first-child { border-radius: 0; }
+  .compare-table th.highlight-col {
+    background: rgba(14,79,255,0.85);
+    color: #fff;
+  }
+  .compare-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--divider);
+    color: var(--ink-soft);
+  }
+  .compare-table td:first-child {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: var(--bg-card); }
+  .compare-table td.highlight-col {
+    background: var(--accent-glow) !important;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .check { color: #22c55e; }
+  .cross { color: #ef4444; }
+  .partial { color: #f59e0b; }
+
+  /* SECTION LABEL */
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* CLOSING */
+  .closing-banner {
+    background: linear-gradient(135deg, var(--pulse) 0%, #0d2060 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 48px 40px;
+    margin-top: 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .closing-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px; height: 200px;
+    background: radial-gradient(ellipse, rgba(14,79,255,0.4) 0%, transparent 70%);
+  }
+  .closing-banner h2 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    margin: 0 0 16px;
+    color: #fff;
+  }
+  .closing-banner p {
+    color: rgba(255,255,255,0.65);
+    max-width: 480px;
+    margin: 0 auto 28px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 13px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    border-top: 1px solid var(--divider);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero > * { animation: fadeUp 0.7s ease both; }
+  .hero-tag { animation-delay: 0.1s; }
+  .hero h1  { animation-delay: 0.25s; }
+  .hero-sub { animation-delay: 0.38s; }
+  .byline   { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-tag">Containerization · DevOps · Infrastructure</div>
+  <h1>Bringing Order to<br/><em>Container Chaos</em></h1>
+  <p class="hero-sub">The containerization landscape is crowded, noisy, and brutally complex. Here's why Nebula Pulse is finally the tool teams have been waiting for.</p>
+  <div class="byline">
+    <span>Nebula Pulse</span> · March 2026 · 9 min read
+  </div>
+</header>
+
+<!-- ARTICLE -->
+<main class="article-wrap">
+
+  <p class="lead">
+    Containers promised to end the "works on my machine" era. And they did — sort of. But in solving one problem, the industry handed developers a new one: an ever-expanding universe of orchestration tools, each with its own learning curve, operational overhead, and breaking point. Understanding the landscape is no longer optional. It's survival.
+  </p>
+
+  <!-- SECTION 1 -->
+  <div class="section-label">Part I</div>
+  <h2>The Containerization Landscape: A Map of the Territory</h2>
+
+  <p>
+    The modern containerization ecosystem is a patchwork of tools born from different eras and different problems. Before we can understand where things are headed, we have to understand where we've been — and what each platform was trying to solve.
+  </p>
+
+  <div class="platform-grid">
+    <div class="platform-card">
+      <div class="p-name">Foundation</div>
+      <div class="p-title">Docker</div>
+      <p class="p-desc">The tool that started it all. Docker made containerization accessible to every developer with a single CLI. It standardized the image format and gave teams a reproducible way to ship software. But Docker is a <em>runtime</em>, not an orchestrator — it doesn't answer the question of <em>how</em> you run containers at scale.</p>
+    </div>
+    <div class="platform-card">
+      <div class="p-name">Enterprise Default</div>
+      <div class="p-title">Kubernetes</div>
+      <p class="p-desc">Kubernetes became the de facto standard for container orchestration. It's powerful, extensible, and battle-hardened. It's also notoriously complex — YAML-heavy, resource-hungry, and requiring dedicated platform engineers to operate well. For many teams, Kubernetes is the right answer. For many more, it's vast overkill.</p>
+    </div>
+    <div class="platform-card">
+      <div class="p-name">The Simpler Path</div>
+      <div class="p-title">Docker Swarm</div>
+      <p class="p-desc">Docker Swarm gave teams native clustering within the Docker ecosystem. Simpler than Kubernetes, familiar to anyone who already knew Docker, and easy to spin up. It fell out of favor partly due to Docker Inc.'s turbulent history and partly because Kubernetes absorbed the industry's mindshare — not necessarily because Swarm was wrong.</p>
+    </div>
+    <div class="platform-card">
+      <div class="p-name">Flexible Workloads</div>
+      <div class="p-title">HashiCorp Nomad</div>
+      <p class="p-desc">Nomad took a different angle — a single binary orchestrator that handles containers, VMs, and raw binaries. Its simplicity and flexibility are genuine strengths, and it integrates deeply with Vault and Consul. But its ecosystem is smaller, adoption is niche, and building on top of it requires significant self-investment.</p>
+    </div>
+    <div class="platform-card">
+      <div class="p-name">Managed Cloud</div>
+      <div class="p-title">AWS ECS / Fargate</div>
+      <p class="p-desc">ECS and Fargate remove the node management headache by outsourcing it to AWS. No cluster to maintain, serverless container execution on Fargate. The tradeoff? Deep vendor lock-in, pricing that scales steeply with usage, and limited flexibility outside the AWS ecosystem.</p>
+    </div>
+    <div class="platform-card">
+      class="platform-card">
+      <div class="p-name">Fully Managed</div>
+      <div class="p-title">Google Cloud Run</div>
+      <p class="p-desc">Cloud Run is the logical endpoint of "just run my container." Deploy an image, get a URL. It abstracts away everything. But it's purely serverless — there's no cluster, no node awareness, no persistent workload control. It's a deployment surface, not an orchestration platform.</p>
+    </div>
+  </div>
+
+  <p>
+    Each of these tools carved out a legitimate niche. And yet, between the raw simplicity of Docker Compose, the enterprise complexity of Kubernetes, and the managed-but-locked cloud offerings, a real gap has persisted for years — particularly for teams that want <strong>real orchestration without the operational weight</strong>.
+  </p>
+
+  <hr class="rule"/>
+
+  <!-- SECTION 2 -->
+  <div class="section-label">Part II</div>
+  <h2>The Gap Nobody Fixed</h2>
+
+  <p>
+    Here's the uncomfortable truth the tooling ecosystem doesn't like to talk about: the vast majority of containerized workloads in production don't need Kubernetes. They need something between <code>docker-compose up</code> and a full RBAC-enabled, multi-tenant, node-autoscaling Kubernetes cluster — something capable, modern, and manageable by a team that isn't a dedicated platform engineering org.
+  </p>
+
+  <div class="callout">
+    <span class="quote-mark">"</span>
+    <p>Engineering teams shouldn't need a Kubernetes certification and three dedicated engineers just to scale a web service. The complexity tax is real — and it's being paid in engineering hours that could go toward building product.</p>
+  </div>
+
+  <p>
+    Docker Swarm was — and still is — genuinely good at this middle ground. It's operationally lightweight, Docker-native, and dramatically simpler to reason about than Kubernetes. The problem isn't Swarm itself. <strong>The problem is that nobody has built a great management layer on top of it.</strong>
+  </p>
+
+  <p>
+    Teams running Swarm in production often find themselves stitching together custom scripts for autoscaling, hacking together authentication flows for their dashboards, and manually wiring CI/CD pipelines to deployments. The infrastructure works — but the <em>experience</em> is rough. Observability is limited. GitOps is an afterthought. Scaling requires hands on keyboards.
+  </p>
+
+  <p>
+    This is the gap. A gap between the powerful-but-exhausting world of Kubernetes and the simple-but-limited world of unmanaged Docker Swarm. Teams operating here have been underserved — until now.
+  </p>
+
+  <hr class="rule"/>
+
+  <!-- SECTION 3 -->
+  <div class="section-label">Part III</div>
+  <h2>Enter Nebula Pulse: A Modern Layer for Docker Swarm</h2>
+
+  <p>
+    <strong>Nebula Pulse</strong> is a modern management platform built specifically for Docker Swarm. It doesn't try to replace Swarm, compete with Kubernetes, or abstract you away from your infrastructure. Instead, it layers exactly the capabilities that Swarm has always been missing — delivering a production-grade experience without the hardware bloat or cognitive overhead that comes with more complex platforms.
+  </p>
+
+  <p>
+    The positioning is precise and intentional: give serious teams a serious tool for a platform that has always deserved better tooling. Where Kubernetes says "learn our 50-concept object model," Nebula Pulse says "here's your Swarm, managed properly."
+  </p>
+
+  <h3>The Core Problem It Solves</h3>
+
+  <p>
+    Running Docker Swarm in 2026 without Nebula Pulse means three things: manual scaling decisions, fragmented authentication, and deployments that require someone to be at a terminal. These aren't edge-case problems — they're the daily friction that erodes team velocity and forces premature migration to heavier platforms. Nebula Pulse attacks all three simultaneously.
+  </p>
+
+  <ul class="feature-list">
+    <li>
+      <div class="feature-icon">⚖️</div>
+      <div class="feature-content">
+        <div class="f-title">Label-Based Autoscaling</div>
+        <div class="f-desc">Define your scaling behavior directly in your service labels. Nebula Pulse reads those labels and handles the rest — no external autoscaler to configure, no sidecar daemons, no custom webhook plumbing. Your services scale to meet demand, automatically, with behavior declared inline where it belongs.</div>
+      </div>
+    </li>
+    <li>
+      <div class="feature-icon">🔐</div>
+      <div class="feature-content">
+        <div class="f-title">Third-Party SSO Integration</div>
+        <div class="f-desc">One of Swarm's most glaring production gaps is authentication. Nebula Pulse brings first-class SSO support — integrate with your existing identity provider so your team authenticates through the same system they use for everything else. No custom auth hacks, no shared credentials floating around in Slack.</div>
+      </div>
+    </li>
+    <li>
+      <div class="feature-icon">🔄</div>
+      <div class="feature-content">
+        <div class="f-title">Zero-Touch GitOps</div>
+        <div class="f-desc">Your Git repository becomes the source of truth. Push to your repo, and Nebula Pulse handles the rest — pulling changes, rolling out updates, and keeping your running services in sync with your declared configuration. No one needs to SSH into a manager node. No one needs to be on-call for a deployment.</div>
+      </div>
+    </li>
+    <li>
+      <div class="feature-icon">🪶</div>
+      <div class="feature-content">
+        <div class="f-title">No Hardware Bloat</div>
+        <div class="f-desc">Kubernetes clusters have an overhead tax. Control plane nodes, etcd clusters, system pods — the infrastructure you need just to run your infrastructure. Nebula Pulse stays lean. It adds capabilities to Swarm without demanding that you provision a fleet of supporting nodes before you ship a single container.</div>
+      </div>
+    </li>
+  </ul>
+
+  <hr class="rule"/>
+
+  <!-- SECTION 4: COMPARISON -->
+  <div class="section-label">Part IV</div>
+  <h2>How the Platforms Stack Up</h2>
+
+  <p>
+    Let's put this in concrete terms. Here's how the key operational dimensions compare across the platforms most teams are choosing between today:
+  </p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>Kubernetes</th>
+        <th>Bare Swarm</th>
+        <th>Nomad</th>
+        <th>ECS/Fargate</th>
+        <th class="highlight-col">Nebula Pulse</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Autoscaling</td>
+        <td><span class="check">✓</span> Complex setup</td>
+        <td><span class="cross">✗</span> Manual</td>
+        <td><span class="partial">~</span> Limited</td>
+        <td><span class="check">✓</span> AWS-native</td>
+        <td class="highlight-col"><span class="check">✓</span> Label-based</td>
+      </tr>
+      <tr>
+        <td>SSO / Auth</td>
+        <td><span class="partial">~</span> OIDC/RBAC config</td>
+        <td><span class="cross">✗</span> None native</td>
+        <td><span class="partial">~</span> Vault dependent</td>
+        <td><span class="check">✓</span> IAM-based</td>
+        <td class="highlight-col"><span class="check">✓</span> 3rd-party SSO</td>
+      </tr>
+      <tr>
+        <td>GitOps</td>
+        <td><span class="check">✓</span> ArgoCD/Flux</td>
+        <td><span class="cross">✗</span> DIY scripts</td>
+        <td><span class="partial">~</span> Custom pipeline</td>
+        <td><span class="partial">~</span> CodePipeline</td>
+        <td class="highlight-col"><span class="check">✓</span> Zero-touch</td>
+      </tr>
+      <tr>
+        <td>Operational Weight</td>
+        <td><span class="cross">✗</span> Very high</td>
+        <td><span class="check">✓</span> Low</td>
+        <td><span class="check">✓</span> Low–medium</td>
+        <td><span class="partial">~</span> Managed, but locked</td>
+        <td class="highlight-col"><span class="check">✓</span> Lean</td>
+      </tr>
+      <tr>
+        <td>Docker-Native</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="partial">~</span></td>
+        <td class="highlight-col"><span class="check">✓</span></td>
+      </tr>
+      <tr>
+        <td>Vendor Lock-In</td>
+        <td>Low</td>
+        <td>None</td>
+        <td>Low</td>
+        <td><span class="cross">✗</span> High (AWS)</td>
+        <td class="highlight-col">None</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    The picture is clear. Kubernetes checks the most boxes — but at an operational cost that's simply not proportionate for a large class of real-world workloads. Bare Swarm is lightweight but leaves you to build everything above the orchestration layer yourself. Nebula Pulse hits the Goldilocks zone: Docker-native simplicity, with production-grade capabilities layered on cleanly.
+  </p>
+
+  <hr class="rule"/>
+
+  <!-- SECTION 5: CONCLUSION -->
+  <div class="section-label">Part V</div>
+  <h2>The Landscape Is Due for a Reckoning</h2>
+
+  <p>
+    The containerization industry has spent a decade telling teams that complexity is the price of capability. That if you want autoscaling, GitOps, and real security, you have to pay for it in YAML files, control plane overhead, and a team of platform engineers. That has never been entirely true — it was just the only deal available.
+  </p>
+
+  <p>
+    Nebula Pulse is a bet that a massive segment of the market was simply underserved. The teams running Swarm — the lean engineering orgs, the startups, the mid-market companies who aren't Google but do need their containers to behave — deserve tooling built specifically for them. Not a stripped-down version of Kubernetes. Not a set of DIY scripts. A platform that starts with Docker Swarm's elegant simplicity and adds exactly the capabilities that make it production-grade.
+  </p>
+
+  <p>
+    Label-based autoscaling that lives where your configuration lives. SSO that treats authentication as a first-class concern, not an afterthought. GitOps that removes humans from the deployment loop entirely. All of it without demanding you spin up three extra nodes just to run the platform itself.
+  </p>
+
+  <p>
+    The era of "you either go full Kubernetes or you figure it out yourself" is ending. Nebula Pulse is what comes next — and it's exactly what Docker Swarm was always meant to have sitting on top of it.
+  </p>
+
+  <div class="closing-banner">
+    <h2>Nebula Pulse is in Pre-Release</h2>
+    <p>Early access agreements are open now. If your team is running Docker Swarm — or has been putting off a decision on orchestration — this is the moment to get in early.</p>
+    <a class="cta-btn" href="https://www.nebula-pulse.com" target="_blank">Request Early Access →</a>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Nebula Pulse, LLC · nebula-pulse.com · Written for Medium
+</footer>
+
+</body>
+</html>
